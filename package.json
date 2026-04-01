@@ -41,6 +41,7 @@
     "react-hook-form": "^7.54.0",
     "react-native": "0.81.5",
     "react-native-gesture-handler": "~2.28.0",
+    "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-mmkv": "^3.1.0",
     "react-native-reanimated": "~4.1.1",
     "react-native-safe-area-context": "~5.6.0",
@@ -66,11 +67,27 @@
   },
   "jest": {
     "preset": "jest-expo",
-    "setupFilesAfterEnv": [
+    "setupFilesAfterFramework": [
       "@testing-library/jest-native/extend-expect"
     ],
+    "setupFiles": [
+      "./jest.setup.js"
+    ],
+    "moduleNameMapper": {
+      "^@store/(.*)$": "<rootDir>/src/store/$1",
+      "^@services/(.*)$": "<rootDir>/src/services/$1",
+      "^@hooks/(.*)$": "<rootDir>/src/hooks/$1",
+      "^@components/(.*)$": "<rootDir>/src/components/$1",
+      "^@types/(.*)$": "<rootDir>/src/types/$1",
+      "^@constants/(.*)$": "<rootDir>/src/constants/$1",
+      "^@lib/(.*)$": "<rootDir>/src/lib/$1"
+    },
+    "testMatch": [
+      "**/__tests__/**/*.{ts,tsx}",
+      "**/*.test.{ts,tsx}"
+    ],
     "transformIgnorePatterns": [
-      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg)"
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg|zustand|@shopify)"
     ],
     "collectCoverageFrom": [
       "src/**/*.{ts,tsx}",

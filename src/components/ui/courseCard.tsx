@@ -1,6 +1,5 @@
-import { memo, useCallback } from 'react';
-import { View, Text, TouchableOpacity, Pressable } from 'react-native';
-import { Image } from 'expo-image';
+import { memo, useCallback, useState } from 'react';
+import { View, Text, TouchableOpacity, Pressable, Image } from 'react-native'; // ← built-in Image
 import { router } from 'expo-router';
 import Animated, {
   useSharedValue,
@@ -19,7 +18,10 @@ interface CourseCardProps {
 const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
 
 export const CourseCard = memo(function CourseCard({ course }: CourseCardProps) {
-  const toggleBookmark = useCourseStore((s) => s.toggleBookmark);  
+  const toggleBookmark = useCourseStore((s) => s.toggleBookmark);
+
+  const [thumbnailError, setThumbnailError] = useState(false);
+  const [avatarError, setAvatarError] = useState(false);
 
   const bookmarkScale = useSharedValue(1);
   const cardScale = useSharedValue(1);
@@ -57,20 +59,35 @@ export const CourseCard = memo(function CourseCard({ course }: CourseCardProps) 
         className="bg-surface-card rounded-2xl mb-4 overflow-hidden border border-gray-800/50"
       >
         {/* Thumbnail */}
-        <View className="relative">
-          <Image
-            source={{ uri: course?.thumbnail as string }}
-            style={{ width: '100%', height: 180 }}
-            contentFit="contain"
-            transition={300}
-            cachePolicy="memory-disk"
-          />
+        <View style={{ width: '100%', height: 180, backgroundColor: '#1f2937' }}>
+          {!thumbnailError && course?.thumbnail ? (
+            <Image
+              source={{ uri: course.thumbnail as string }}
+              style={{ width: '100%', height: 180 }}
+              resizeMode="cover"
+              onError={(e) => {
+                console.log('Thumbnail error:', e.nativeEvent.error); // ← shows exact error
+                setThumbnailError(true);
+              }}
+              onLoad={() => console.log('Thumbnail loaded OK:', course.thumbnail)}
+            />
+          ) : (
+            // Fallback placeholder when image fails
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+              <Text style={{ fontSize: 40 }}>🎓</Text>
+              <Text style={{ color: '#6b7280', fontSize: 12, marginTop: 4 }}>
+                Image not available
+              </Text>
+            </View>
+          )}
+
           {/* Category badge */}
           <View className="absolute top-3 left-3 bg-primary-500/90 rounded-full px-3 py-1">
             <Text className="text-white text-xs font-medium capitalize">
               {course.category}
             </Text>
           </View>
+
           {/* Bookmark button */}
           <AnimatedTouchable
             style={[bookmarkStyle, { position: 'absolute', top: 8, right: 8 }]}
@@ -88,12 +105,24 @@ export const CourseCard = memo(function CourseCard({ course }: CourseCardProps) 
         <View className="p-4">
           {/* Instructor row */}
           <View className="flex-row items-center gap-2 mb-3">
-            <Image
-              source={{ uri: course?.instructorAvatar as string }}
-              style={{ width: 28, height: 28, borderRadius: 14 }}
-              contentFit="cover"
-              cachePolicy="memory-disk"
-            />
+            {!avatarError && course?.instructorAvatar ? (
+              <Image
+                source={{ uri: course.instructorAvatar as string }}
+                style={{ width: 28, height: 28, borderRadius: 14 }}
+                resizeMode="cover"
+                onError={() => setAvatarError(true)}
+              />
+            ) : (
+              <View
+                style={{
+                  width: 28, height: 28, borderRadius: 14,
+                  backgroundColor: '#374151',
+                  alignItems: 'center', justifyContent: 'center',
+                }}
+              >
+                <Text style={{ fontSize: 14 }}>👤</Text>
+              </View>
+            )}
             <Text className="text-gray-400 text-sm flex-1" numberOfLines={1}>
               {course.instructorName}
             </Text>

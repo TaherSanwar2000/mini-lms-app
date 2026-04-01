@@ -70,7 +70,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   extra: {
     apiBaseUrl: process.env.EXPO_PUBLIC_API_BASE_URL ?? 'https://api.freeapi.app',
     eas: {
-      projectId: process.env.EAS_PROJECT_ID ?? '',
+      projectId: '30a6c9c0-fef5-484f-a037-b1ff5f53fd95',
     },
   },
 });

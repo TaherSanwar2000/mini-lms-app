@@ -25,8 +25,7 @@ export default function HomeScreen() {
   const fetchMoreCourses  = useCourseStore((s) => s.fetchMoreCourses);
   const clearError        = useCourseStore((s) => s.clearError);
 
-  // ── Selector: Zustand only re-renders when the returned array changes ──
-  const courses = useCourseStore(selectFilteredCourses);
+  const courses = useCourseStore(selectFilteredCourses);  
 
   useEffect(() => {
     void fetchCourses();

@@ -4,9 +4,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  KeyboardAvoidingView,
   Platform,
-  ScrollView,
   ActivityIndicator,
 } from 'react-native';
 import { Link, router } from 'expo-router';
@@ -22,6 +20,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useAuthStore } from '../../src/store/authStore';
 import { loginSchema, type LoginSchema } from '../../src/schemas';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 export default function LoginScreen() {
   const { login, isLoading, error, clearError, isAuthenticated } = useAuthStore();
@@ -83,15 +82,15 @@ export default function LoginScreen() {
   };
 
   return (
-    <KeyboardAvoidingView
-      className="flex-1 bg-surface"
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
-      <ScrollView
-        contentContainerStyle={{ flexGrow: 1 }}
-        keyboardShouldPersistTaps="handled"
-        className="flex-1"
-      >
+    <KeyboardAwareScrollView
+         style={{ flex: 1 }}
+         className="bg-surface"
+         contentContainerStyle={{ flexGrow: 1 }}
+         keyboardShouldPersistTaps="handled"
+         enableOnAndroid={true}
+         extraScrollHeight={Platform.OS === 'android' ? 40 : 20}
+         showsVerticalScrollIndicator={false}
+       >
         <View className="flex-1 px-6 pt-20 pb-10 justify-center">
 
           {/* Header */}
@@ -193,7 +192,6 @@ export default function LoginScreen() {
             </View>
           </Animated.View>
         </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+   </KeyboardAwareScrollView>
   );
 }

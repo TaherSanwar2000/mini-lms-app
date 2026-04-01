@@ -161,7 +161,6 @@ function buildCourseHTML(params: {
   </div>
 
   <button class="btn btn-primary" onclick="markProgress()">Continue Learning</button>
-  <button class="btn btn-secondary" onclick="sendToNative('close')">← Back to App</button>
 
   <div class="toast" id="toast">Progress saved! 🎉</div>
 
