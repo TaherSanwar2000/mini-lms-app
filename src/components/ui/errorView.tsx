@@ -12,7 +12,9 @@ export function ErrorView({ message, onRetry }: ErrorViewProps) {
       entering={FadeIn.duration(400)}
       className="flex-1 items-center justify-center px-8 py-16"
     >
-      <Text style={{ fontSize: 48 }} className="mb-4">⚠️</Text>
+      <Text style={{ fontSize: 48 }} className="mb-4">
+        ⚠️
+      </Text>
       <Text className="text-white text-xl font-semibold text-center mb-2">
         Something went wrong
       </Text>

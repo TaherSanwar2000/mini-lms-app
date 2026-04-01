@@ -3,7 +3,10 @@ import { View, Text, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FlashList } from '@shopify/flash-list';
 import Animated, { FadeInDown } from 'react-native-reanimated';
-import { useCourseStore, selectFilteredCoursesMemo as selectFilteredCourses } from '../../src/store/courseStore';
+import {
+  useCourseStore,
+  selectFilteredCoursesMemo as selectFilteredCourses,
+} from '../../src/store/courseStore';
 import { useAuthStore } from '../../src/store/authStore';
 import { CourseCard } from '../../src/components/ui/courseCard';
 import { SearchBar } from '../../src/components/ui/searchBar';
@@ -12,20 +15,19 @@ import { ErrorView } from '../../src/components/ui/errorView';
 import { LoadingView } from '../../src/components/ui/loadingView';
 import type { Course } from '../../src/types';
 
-
 export default function HomeScreen() {
   const username = useAuthStore((s) => s.user?.username);
 
   // ── Subscribe to each primitive individually — no shallow needed ──
-  const isLoading     = useCourseStore((s) => s.isLoading);
-  const isRefreshing  = useCourseStore((s) => s.isRefreshing);
-  const error         = useCourseStore((s) => s.error);
-  const hasMore       = useCourseStore((s) => s.hasMore);
-  const fetchCourses      = useCourseStore((s) => s.fetchCourses);
-  const fetchMoreCourses  = useCourseStore((s) => s.fetchMoreCourses);
-  const clearError        = useCourseStore((s) => s.clearError);
+  const isLoading = useCourseStore((s) => s.isLoading);
+  const isRefreshing = useCourseStore((s) => s.isRefreshing);
+  const error = useCourseStore((s) => s.error);
+  const hasMore = useCourseStore((s) => s.hasMore);
+  const fetchCourses = useCourseStore((s) => s.fetchCourses);
+  const fetchMoreCourses = useCourseStore((s) => s.fetchMoreCourses);
+  const clearError = useCourseStore((s) => s.clearError);
 
-  const courses = useCourseStore(selectFilteredCourses);  
+  const courses = useCourseStore(selectFilteredCourses);
 
   useEffect(() => {
     void fetchCourses();
@@ -66,7 +68,9 @@ export default function HomeScreen() {
 
   const EmptyComponent = !isLoading ? (
     <View className="items-center py-16 px-8">
-      <Text style={{ fontSize: 48 }} className="mb-4">📚</Text>
+      <Text style={{ fontSize: 48 }} className="mb-4">
+        📚
+      </Text>
       <Text className="text-white text-lg font-semibold text-center mb-2">No courses found</Text>
       <Text className="text-gray-400 text-sm text-center">
         Try a different search term or pull down to refresh

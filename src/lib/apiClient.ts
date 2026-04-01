@@ -120,10 +120,9 @@ apiClient.interceptors.response.use(
           return Promise.reject(error);
         }
 
-        const { data } = await axios.post(
-          `${BASE_URL}/api/v1/users/refresh-token`,
-          { refreshToken },
-        );
+        const { data } = await axios.post(`${BASE_URL}/api/v1/users/refresh-token`, {
+          refreshToken,
+        });
 
         const newAccessToken: string = data.data.accessToken;
         const newRefreshToken: string = data.data.refreshToken;
@@ -140,10 +139,7 @@ apiClient.interceptors.response.use(
         // Only clear tokens if the refresh call itself returned 401/403
         // — not on network errors, so users aren't logged out on a bad connection
         const refreshErr = refreshError as AxiosError;
-        if (
-          refreshErr.response?.status === 401 ||
-          refreshErr.response?.status === 403
-        ) {
+        if (refreshErr.response?.status === 401 || refreshErr.response?.status === 403) {
           await SecureStore.deleteItemAsync(STORAGE_KEYS.ACCESS_TOKEN);
           await SecureStore.deleteItemAsync(STORAGE_KEYS.REFRESH_TOKEN);
         }

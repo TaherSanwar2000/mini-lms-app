@@ -112,7 +112,9 @@ describe('useCourseStore — fetchCourses', () => {
     useCourseStore.setState({ bookmarks: [1], enrollments: [2] });
     const { result } = renderHook(() => useCourseStore());
 
-    await act(async () => { await result.current.fetchCourses(); });
+    await act(async () => {
+      await result.current.fetchCourses();
+    });
 
     expect(result.current.courses).toHaveLength(2);
     expect(result.current.courses[0]?.isBookmarked).toBe(true);
@@ -123,21 +125,31 @@ describe('useCourseStore — fetchCourses', () => {
 
   it('sets isRefreshing on pull-to-refresh', async () => {
     let resolve!: (v: any) => void;
-    mockCourseService.fetchCourses.mockReturnValueOnce(new Promise((r) => { resolve = r; }));
+    mockCourseService.fetchCourses.mockReturnValueOnce(
+      new Promise((r) => {
+        resolve = r;
+      }),
+    );
     const { result } = renderHook(() => useCourseStore());
 
-    act(() => { void result.current.fetchCourses(true); });
+    act(() => {
+      void result.current.fetchCourses(true);
+    });
     expect(result.current.isRefreshing).toBe(true);
     expect(result.current.isLoading).toBe(false);
 
-    await act(async () => { resolve({ courses: [], hasMore: false }); });
+    await act(async () => {
+      resolve({ courses: [], hasMore: false });
+    });
   });
 
   it('sets error on failure', async () => {
     mockCourseService.fetchCourses.mockRejectedValueOnce(new Error('Network error'));
     const { result } = renderHook(() => useCourseStore());
 
-    await act(async () => { await result.current.fetchCourses(); });
+    await act(async () => {
+      await result.current.fetchCourses();
+    });
 
     expect(result.current.error).toBe('Network error');
     expect(result.current.isLoading).toBe(false);
@@ -147,7 +159,9 @@ describe('useCourseStore — fetchCourses', () => {
     mockCourseService.fetchCourses.mockRejectedValueOnce('timeout');
     const { result } = renderHook(() => useCourseStore());
 
-    await act(async () => { await result.current.fetchCourses(); });
+    await act(async () => {
+      await result.current.fetchCourses();
+    });
 
     expect(result.current.error).toBe('Failed to load courses.');
   });
@@ -156,7 +170,9 @@ describe('useCourseStore — fetchCourses', () => {
     useCourseStore.setState({ isLoading: true });
     const { result } = renderHook(() => useCourseStore());
 
-    await act(async () => { await result.current.fetchCourses(); });
+    await act(async () => {
+      await result.current.fetchCourses();
+    });
 
     expect(mockCourseService.fetchCourses).not.toHaveBeenCalled();
   });
@@ -172,7 +188,9 @@ describe('useCourseStore — fetchMoreCourses', () => {
     });
     const { result } = renderHook(() => useCourseStore());
 
-    await act(async () => { await result.current.fetchMoreCourses(); });
+    await act(async () => {
+      await result.current.fetchMoreCourses();
+    });
 
     expect(result.current.courses).toHaveLength(2);
     expect(result.current.page).toBe(2);
@@ -183,7 +201,9 @@ describe('useCourseStore — fetchMoreCourses', () => {
     useCourseStore.setState({ hasMore: false });
     const { result } = renderHook(() => useCourseStore());
 
-    await act(async () => { await result.current.fetchMoreCourses(); });
+    await act(async () => {
+      await result.current.fetchMoreCourses();
+    });
 
     expect(mockCourseService.fetchCourses).not.toHaveBeenCalled();
   });
@@ -200,7 +220,9 @@ describe('useCourseStore — toggleBookmark', () => {
     useCourseStore.setState({ courses: [makeCourse(1)], bookmarks: [] });
     const { result } = renderHook(() => useCourseStore());
 
-    await act(async () => { await result.current.toggleBookmark(1); });
+    await act(async () => {
+      await result.current.toggleBookmark(1);
+    });
 
     expect(result.current.bookmarks).toContain(1);
     expect(result.current.courses[0]?.isBookmarked).toBe(true);
@@ -213,7 +235,9 @@ describe('useCourseStore — toggleBookmark', () => {
     });
     const { result } = renderHook(() => useCourseStore());
 
-    await act(async () => { await result.current.toggleBookmark(1); });
+    await act(async () => {
+      await result.current.toggleBookmark(1);
+    });
 
     expect(result.current.bookmarks).not.toContain(1);
     expect(result.current.courses[0]?.isBookmarked).toBe(false);
@@ -224,7 +248,9 @@ describe('useCourseStore — toggleBookmark', () => {
     useCourseStore.setState({ courses, bookmarks: [1, 2, 3, 4] });
     const { result } = renderHook(() => useCourseStore());
 
-    await act(async () => { await result.current.toggleBookmark(5); });
+    await act(async () => {
+      await result.current.toggleBookmark(5);
+    });
 
     expect(mockNotifService.scheduleBookmarkMilestoneNotification).toHaveBeenCalledWith(5);
   });
@@ -233,7 +259,9 @@ describe('useCourseStore — toggleBookmark', () => {
     useCourseStore.setState({ courses: [makeCourse(1)], bookmarks: [] });
     const { result } = renderHook(() => useCourseStore());
 
-    await act(async () => { await result.current.toggleBookmark(1); });
+    await act(async () => {
+      await result.current.toggleBookmark(1);
+    });
 
     expect(mockNotifService.scheduleBookmarkMilestoneNotification).not.toHaveBeenCalled();
   });
@@ -249,7 +277,9 @@ describe('useCourseStore — toggleEnrollment', () => {
     useCourseStore.setState({ courses: [makeCourse(1)], enrollments: [] });
     const { result } = renderHook(() => useCourseStore());
 
-    await act(async () => { await result.current.toggleEnrollment(1); });
+    await act(async () => {
+      await result.current.toggleEnrollment(1);
+    });
 
     expect(result.current.enrollments).toContain(1);
     expect(result.current.courses[0]?.isEnrolled).toBe(true);
@@ -262,7 +292,9 @@ describe('useCourseStore — toggleEnrollment', () => {
     });
     const { result } = renderHook(() => useCourseStore());
 
-    await act(async () => { await result.current.toggleEnrollment(1); });
+    await act(async () => {
+      await result.current.toggleEnrollment(1);
+    });
 
     expect(result.current.enrollments).not.toContain(1);
   });
@@ -272,14 +304,18 @@ describe('useCourseStore — toggleEnrollment', () => {
 describe('useCourseStore — setSearchQuery & clearError', () => {
   it('updates searchQuery', () => {
     const { result } = renderHook(() => useCourseStore());
-    act(() => { result.current.setSearchQuery('react native'); });
+    act(() => {
+      result.current.setSearchQuery('react native');
+    });
     expect(result.current.searchQuery).toBe('react native');
   });
 
   it('clears error', () => {
     useCourseStore.setState({ error: 'Something broke' });
     const { result } = renderHook(() => useCourseStore());
-    act(() => { result.current.clearError(); });
+    act(() => {
+      result.current.clearError();
+    });
     expect(result.current.error).toBeNull();
   });
 });
@@ -291,7 +327,9 @@ describe('useCourseStore — loadPersistedData', () => {
     mockCourseService.getEnrollments.mockResolvedValueOnce([3]);
     const { result } = renderHook(() => useCourseStore());
 
-    await act(async () => { await result.current.loadPersistedData(); });
+    await act(async () => {
+      await result.current.loadPersistedData();
+    });
 
     expect(result.current.bookmarks).toEqual([1, 2]);
     expect(result.current.enrollments).toEqual([3]);

@@ -68,13 +68,21 @@ describe('useAuthStore — login', () => {
 
   it('sets isLoading true while login is in progress', async () => {
     let resolveLogin!: (v: any) => void;
-    mockAuthService.login.mockReturnValueOnce(new Promise((res) => { resolveLogin = res; }));
+    mockAuthService.login.mockReturnValueOnce(
+      new Promise((res) => {
+        resolveLogin = res;
+      }),
+    );
     const { result } = renderHook(() => useAuthStore());
 
-    act(() => { void result.current.login({ username: 'testuser', password: 'Password1!' }); });
+    act(() => {
+      void result.current.login({ username: 'testuser', password: 'Password1!' });
+    });
     expect(result.current.isLoading).toBe(true);
 
-    await act(async () => { resolveLogin({ user: mockUser, tokens: mockTokens }); });
+    await act(async () => {
+      resolveLogin({ user: mockUser, tokens: mockTokens });
+    });
   });
 
   it('sets error message on failed login', async () => {
@@ -82,8 +90,11 @@ describe('useAuthStore — login', () => {
     const { result } = renderHook(() => useAuthStore());
 
     await act(async () => {
-      try { await result.current.login({ username: 'bad', password: 'wrong' }); }
-      catch { /* expected */ }
+      try {
+        await result.current.login({ username: 'bad', password: 'wrong' });
+      } catch {
+        /* expected */
+      }
     });
 
     expect(result.current.isAuthenticated).toBe(false);
@@ -96,8 +107,11 @@ describe('useAuthStore — login', () => {
     const { result } = renderHook(() => useAuthStore());
 
     await act(async () => {
-      try { await result.current.login({ username: 'x', password: 'y' }); }
-      catch { /* expected */ }
+      try {
+        await result.current.login({ username: 'x', password: 'y' });
+      } catch {
+        /* expected */
+      }
     });
 
     expect(result.current.error).toBe('Login failed. Please try again.');
@@ -109,8 +123,11 @@ describe('useAuthStore — login', () => {
     let caught: unknown;
 
     await act(async () => {
-      try { await result.current.login({ username: 'x', password: 'y' }); }
-      catch (e) { caught = e; }
+      try {
+        await result.current.login({ username: 'x', password: 'y' });
+      } catch (e) {
+        caught = e;
+      }
     });
 
     expect(caught).toBeInstanceOf(Error);
@@ -125,8 +142,10 @@ describe('useAuthStore — register', () => {
 
     await act(async () => {
       await result.current.register({
-        username: 'newuser', email: 'new@example.com',
-        password: 'Password1!', confirmPassword: 'Password1!',
+        username: 'newuser',
+        email: 'new@example.com',
+        password: 'Password1!',
+        confirmPassword: 'Password1!',
       });
     });
 
@@ -142,10 +161,14 @@ describe('useAuthStore — register', () => {
     await act(async () => {
       try {
         await result.current.register({
-          username: 'taken', email: 'x@x.com',
-          password: 'Password1!', confirmPassword: 'Password1!',
+          username: 'taken',
+          email: 'x@x.com',
+          password: 'Password1!',
+          confirmPassword: 'Password1!',
         });
-      } catch { /* expected */ }
+      } catch {
+        /* expected */
+      }
     });
 
     expect(result.current.error).toBe('Username taken');
@@ -159,7 +182,9 @@ describe('useAuthStore — logout', () => {
     mockAuthService.logout.mockResolvedValueOnce(undefined);
     const { result } = renderHook(() => useAuthStore());
 
-    await act(async () => { await result.current.logout(); });
+    await act(async () => {
+      await result.current.logout();
+    });
 
     expect(result.current.user).toBeNull();
     expect(result.current.tokens).toBeNull();
@@ -171,7 +196,9 @@ describe('useAuthStore — logout', () => {
     mockAuthService.logout.mockRejectedValueOnce(new Error('Network error'));
     const { result } = renderHook(() => useAuthStore());
 
-    await act(async () => { await result.current.logout(); });
+    await act(async () => {
+      await result.current.logout();
+    });
 
     expect(result.current.user).toBeNull();
     expect(result.current.isAuthenticated).toBe(false);
@@ -186,7 +213,9 @@ describe('useAuthStore — restoreSession', () => {
     mockAuthService.getCurrentUser.mockResolvedValueOnce(mockUser);
     const { result } = renderHook(() => useAuthStore());
 
-    await act(async () => { await result.current.restoreSession(); });
+    await act(async () => {
+      await result.current.restoreSession();
+    });
 
     expect(result.current.isAuthenticated).toBe(true);
     expect(result.current.user).toEqual(mockUser);
@@ -198,7 +227,9 @@ describe('useAuthStore — restoreSession', () => {
     mockAuthService.getStoredTokens.mockResolvedValueOnce(null);
     const { result } = renderHook(() => useAuthStore());
 
-    await act(async () => { await result.current.restoreSession(); });
+    await act(async () => {
+      await result.current.restoreSession();
+    });
 
     expect(result.current.isAuthenticated).toBe(false);
     expect(result.current.isLoading).toBe(false);
@@ -211,7 +242,9 @@ describe('useAuthStore — restoreSession', () => {
     mockAuthService.logout.mockResolvedValueOnce(undefined);
     const { result } = renderHook(() => useAuthStore());
 
-    await act(async () => { await result.current.restoreSession(); });
+    await act(async () => {
+      await result.current.restoreSession();
+    });
 
     expect(result.current.isAuthenticated).toBe(false);
   });
@@ -224,7 +257,9 @@ describe('useAuthStore — updateUser & clearError', () => {
     const updated = { ...mockUser, username: 'updated_name' };
     const { result } = renderHook(() => useAuthStore());
 
-    act(() => { result.current.updateUser(updated); });
+    act(() => {
+      result.current.updateUser(updated);
+    });
 
     expect(result.current.user?.username).toBe('updated_name');
   });
@@ -233,7 +268,9 @@ describe('useAuthStore — updateUser & clearError', () => {
     useAuthStore.setState({ error: 'Some error' });
     const { result } = renderHook(() => useAuthStore());
 
-    act(() => { result.current.clearError(); });
+    act(() => {
+      result.current.clearError();
+    });
 
     expect(result.current.error).toBeNull();
   });

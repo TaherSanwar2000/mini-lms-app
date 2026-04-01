@@ -10,7 +10,7 @@ jest.mock('@react-native-community/netinfo', () => ({
 const mockNetInfo = NetInfo as jest.Mocked<typeof NetInfo>;
 
 // Capture the listener registered by the hook so tests can simulate changes
-let capturedListener: ((state: any) => void) = () => {};
+let capturedListener: (state: any) => void = () => {};
 const mockUnsubscribe = jest.fn();
 
 beforeEach(() => {

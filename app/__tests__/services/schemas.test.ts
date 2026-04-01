@@ -79,25 +79,41 @@ describe('registerSchema', () => {
   });
 
   it('fails with password shorter than 8 characters', () => {
-    const result = registerSchema.safeParse({ ...valid, password: 'Sec1!', confirmPassword: 'Sec1!' });
+    const result = registerSchema.safeParse({
+      ...valid,
+      password: 'Sec1!',
+      confirmPassword: 'Sec1!',
+    });
     expect(result.success).toBe(false);
     if (!result.success) expect(result.error.issues[0]?.message).toContain('at least 8');
   });
 
   it('fails when password has no uppercase letter', () => {
-    const r = registerSchema.safeParse({ ...valid, password: 'secret123!', confirmPassword: 'secret123!' });
+    const r = registerSchema.safeParse({
+      ...valid,
+      password: 'secret123!',
+      confirmPassword: 'secret123!',
+    });
     expect(r.success).toBe(false);
     if (!r.success) expect(r.error.issues.some((i) => i.message.includes('uppercase'))).toBe(true);
   });
 
   it('fails when password has no number', () => {
-    const r = registerSchema.safeParse({ ...valid, password: 'SecretPass!', confirmPassword: 'SecretPass!' });
+    const r = registerSchema.safeParse({
+      ...valid,
+      password: 'SecretPass!',
+      confirmPassword: 'SecretPass!',
+    });
     expect(r.success).toBe(false);
     if (!r.success) expect(r.error.issues.some((i) => i.message.includes('number'))).toBe(true);
   });
 
   it('fails when password has no special character', () => {
-    const r = registerSchema.safeParse({ ...valid, password: 'SecretPass1', confirmPassword: 'SecretPass1' });
+    const r = registerSchema.safeParse({
+      ...valid,
+      password: 'SecretPass1',
+      confirmPassword: 'SecretPass1',
+    });
     expect(r.success).toBe(false);
     if (!r.success) expect(r.error.issues.some((i) => i.message.includes('special'))).toBe(true);
   });
@@ -113,7 +129,12 @@ describe('registerSchema', () => {
   });
 
   it('reports multiple field errors at once', () => {
-    const result = registerSchema.safeParse({ username: 'x', email: 'bad', password: 'weak', confirmPassword: 'diff' });
+    const result = registerSchema.safeParse({
+      username: 'x',
+      email: 'bad',
+      password: 'weak',
+      confirmPassword: 'diff',
+    });
     expect(result.success).toBe(false);
     if (!result.success) expect(result.error.issues.length).toBeGreaterThan(1);
   });

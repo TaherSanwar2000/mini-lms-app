@@ -4,7 +4,6 @@ import { notificationService } from '../services/notificationService';
 import { BOOKMARK_MILESTONE } from '../constants/app.constants';
 import type { Course, CourseState } from '../types';
 
-
 interface CourseActions {
   fetchCourses: (refresh?: boolean) => Promise<void>;
   fetchMoreCourses: () => Promise<void>;
@@ -69,7 +68,12 @@ export const useCourseStore = create<CourseStore>((set, get) => ({
         isBookmarked: bookmarks.includes(c.id),
         isEnrolled: enrollments.includes(c.id),
       }));
-      set({ courses: [...courses, ...enriched], page: nextPage, hasMore: moreAvailable, isLoading: false });
+      set({
+        courses: [...courses, ...enriched],
+        page: nextPage,
+        hasMore: moreAvailable,
+        isLoading: false,
+      });
     } catch {
       set({ isLoading: false });
     }
@@ -146,7 +150,7 @@ let _bResult: Course[] = [];
 
 export const selectBookmarkedCourses = (state: CourseStore): Course[] => {
   const { courses } = state;
-  if (courses === _bCourses) return _bResult;  // same ref → return cached
+  if (courses === _bCourses) return _bResult; // same ref → return cached
   _bCourses = courses;
   _bResult = courses.filter((c) => c.isBookmarked);
   return _bResult;

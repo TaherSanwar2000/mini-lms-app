@@ -1,14 +1,7 @@
-import { useCallback, useState } from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-  Alert,
-  Image as RNImage,
-} from "react-native";
-import { useLocalSearchParams, router, Stack } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useCallback, useState } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, Alert, Image as RNImage } from 'react-native';
+import { useLocalSearchParams, router, Stack } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Animated, {
   FadeInDown,
   useSharedValue,
@@ -16,9 +9,9 @@ import Animated, {
   withSpring,
   withSequence,
   withTiming,
-} from "react-native-reanimated";
-import { useCourseStore } from "../../src/store/courseStore";
-import { Image } from "expo-image";
+} from 'react-native-reanimated';
+import { useCourseStore } from '../../src/store/courseStore';
+import { Image } from 'expo-image';
 
 // ─── Placeholder components ───────────────────────────────────────────────────
 
@@ -26,20 +19,20 @@ function ThumbnailPlaceholder({ title }: { title: string }) {
   return (
     <View
       style={{
-        width: "100%",
+        width: '100%',
         height: 180,
-        backgroundColor: "#1E293B",
-        alignItems: "center",
-        justifyContent: "center",
+        backgroundColor: '#1E293B',
+        alignItems: 'center',
+        justifyContent: 'center',
         gap: 8,
       }}
     >
       <Text style={{ fontSize: 48 }}>🎓</Text>
       <Text
         style={{
-          color: "#6B7280",
+          color: '#6B7280',
           fontSize: 13,
-          textAlign: "center",
+          textAlign: 'center',
           paddingHorizontal: 24,
         }}
         numberOfLines={2}
@@ -57,9 +50,9 @@ function AvatarPlaceholder() {
         width: 44,
         height: 44,
         borderRadius: 22,
-        backgroundColor: "#374151",
-        alignItems: "center",
-        justifyContent: "center",
+        backgroundColor: '#374151',
+        alignItems: 'center',
+        justifyContent: 'center',
       }}
     >
       <Text style={{ fontSize: 20 }}>👤</Text>
@@ -75,9 +68,9 @@ function PreviewImagePlaceholder() {
         height: 90,
         borderRadius: 8,
         marginRight: 10,
-        backgroundColor: "#1E293B",
-        alignItems: "center",
-        justifyContent: "center",
+        backgroundColor: '#1E293B',
+        alignItems: 'center',
+        justifyContent: 'center',
       }}
     >
       <Text style={{ fontSize: 24 }}>⚠️</Text>
@@ -125,29 +118,23 @@ export default function CourseDetailScreen() {
 
   const handleEnroll = useCallback(() => {
     if (!course) return;
-    enrollScale.value = withSequence(
-      withTiming(0.95, { duration: 80 }),
-      withSpring(1),
-    );
+    enrollScale.value = withSequence(withTiming(0.95, { duration: 80 }), withSpring(1));
     void toggleEnrollment(course.id);
     if (!course.isEnrolled) {
-      Alert.alert("Enrolled! 🎉", `You are now enrolled in "${course.title}"`);
+      Alert.alert('Enrolled! 🎉', `You are now enrolled in "${course.title}"`);
     }
   }, [course, toggleEnrollment]);
 
   const handleBookmark = useCallback(() => {
     if (!course) return;
-    bookmarkScale.value = withSequence(
-      withSpring(1.3, { damping: 4 }),
-      withSpring(1),
-    );
+    bookmarkScale.value = withSequence(withSpring(1.3, { damping: 4 }), withSpring(1));
     void toggleBookmark(course.id);
   }, [course, toggleBookmark]);
 
   const handleViewContent = useCallback(() => {
     if (!course) return;
     router.push({
-      pathname: "/course/webview",
+      pathname: '/course/webview',
       params: { courseId: String(course.id), title: course.title },
     });
   }, [course]);
@@ -168,29 +155,26 @@ export default function CourseDetailScreen() {
     <>
       <Stack.Screen
         options={{
-          title: "",
-          headerStyle: { backgroundColor: "#0F172A" },
-          headerTintColor: "#FFFFFF",
+          title: '',
+          headerStyle: { backgroundColor: '#0F172A' },
+          headerTintColor: '#FFFFFF',
           headerRight: () => (
             <Animated.View style={bookmarkStyle}>
               <TouchableOpacity onPress={handleBookmark} hitSlop={8}>
-                <Text style={{ fontSize: 22 }}>
-                  {course.isBookmarked ? "🔖" : "🤍"}
-                </Text>
+                <Text style={{ fontSize: 22 }}>{course.isBookmarked ? '🔖' : '🤍'}</Text>
               </TouchableOpacity>
             </Animated.View>
           ),
         }}
       />
 
-      <SafeAreaView className="flex-1 bg-surface" edges={["bottom"]}>
+      <SafeAreaView className="flex-1 bg-surface" edges={['bottom']}>
         <ScrollView showsVerticalScrollIndicator={false}>
-
           {/* ── Thumbnail ── */}
           {showThumbnail ? (
             <RNImage
               source={{ uri: course.thumbnail as string }}
-              style={{ width: "100%", height: 180 }}
+              style={{ width: '100%', height: 180 }}
               resizeMode="cover"
               onError={() => setThumbnailError(true)}
             />
@@ -199,7 +183,6 @@ export default function CourseDetailScreen() {
           )}
 
           <View className="px-4 py-6 gap-4">
-
             {/* Category + rating */}
             <Animated.View
               entering={FadeInDown.delay(50).springify()}
@@ -212,12 +195,8 @@ export default function CourseDetailScreen() {
               </View>
               <View className="flex-row items-center gap-1">
                 <Text style={{ fontSize: 14 }}>⭐</Text>
-                <Text className="text-yellow-400 font-semibold">
-                  {course.rating.toFixed(1)}
-                </Text>
-                <Text className="text-gray-500 text-sm">
-                  ({course.stock} reviews)
-                </Text>
+                <Text className="text-yellow-400 font-semibold">{course.rating.toFixed(1)}</Text>
+                <Text className="text-gray-500 text-sm">({course.stock} reviews)</Text>
               </View>
             </Animated.View>
 
@@ -246,32 +225,21 @@ export default function CourseDetailScreen() {
               )}
               <View>
                 <Text className="text-gray-400 text-xs mb-0.5">Instructor</Text>
-                <Text className="text-white font-semibold">
-                  {course.instructorName}
-                </Text>
+                <Text className="text-white font-semibold">{course.instructorName}</Text>
               </View>
             </Animated.View>
 
             {/* Description */}
             <Animated.View entering={FadeInDown.delay(200).springify()}>
-              <Text className="text-white font-semibold text-lg mb-2">
-                About this course
-              </Text>
-              <Text className="text-gray-400 text-base leading-relaxed">
-                {course.description}
-              </Text>
+              <Text className="text-white font-semibold text-lg mb-2">About this course</Text>
+              <Text className="text-gray-400 text-base leading-relaxed">{course.description}</Text>
             </Animated.View>
 
             {/* ── Preview images ── */}
             {course.images.length > 1 && (
               <Animated.View entering={FadeInDown.delay(250).springify()}>
-                <Text className="text-white font-semibold text-lg mb-2">
-                  Preview
-                </Text>
-                <ScrollView
-                  horizontal
-                  showsHorizontalScrollIndicator={false}
-                >
+                <Text className="text-white font-semibold text-lg mb-2">Preview</Text>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                   {course.images.slice(0, 4).map((img, i) => (
                     <PreviewImage key={i} uri={img} />
                   ))}
@@ -284,9 +252,7 @@ export default function CourseDetailScreen() {
               entering={FadeInDown.delay(300).springify()}
               className="flex-row items-center gap-3"
             >
-              <Text className="text-white text-3xl font-bold">
-                ${discountedPrice.toFixed(2)}
-              </Text>
+              <Text className="text-white text-3xl font-bold">${discountedPrice.toFixed(2)}</Text>
               {course.discountPercentage > 0 && (
                 <>
                   <Text className="text-gray-500 text-lg line-through">
@@ -319,17 +285,13 @@ export default function CourseDetailScreen() {
             <TouchableOpacity
               onPress={handleEnroll}
               className={`rounded-xl py-4 items-center ${
-                course.isEnrolled
-                  ? "bg-green-500/20 border border-green-500/30"
-                  : "bg-primary-500"
+                course.isEnrolled ? 'bg-green-500/20 border border-green-500/30' : 'bg-primary-500'
               }`}
             >
               <Text
-                className={`font-semibold ${
-                  course.isEnrolled ? "text-green-400" : "text-white"
-                }`}
+                className={`font-semibold ${course.isEnrolled ? 'text-green-400' : 'text-white'}`}
               >
-                {course.isEnrolled ? "✓ Enrolled" : "Enroll Now"}
+                {course.isEnrolled ? '✓ Enrolled' : 'Enroll Now'}
               </Text>
             </TouchableOpacity>
           </Animated.View>

@@ -146,11 +146,17 @@ function buildCourseHTML(params: {
 
   <div class="section">
     <h2>Course Modules</h2>
-    ${['Introduction & Overview', 'Core Concepts', 'Hands-on Practice', 'Advanced Topics', 'Final Assessment']
+    ${[
+      'Introduction & Overview',
+      'Core Concepts',
+      'Hands-on Practice',
+      'Advanced Topics',
+      'Final Assessment',
+    ]
       .map(
         (m, i) => `
       <div class="module">
-        <span class="module-icon">${['📖','🎯','🛠️','🚀','🏆'][i]}</span>
+        <span class="module-icon">${['📖', '🎯', '🛠️', '🚀', '🏆'][i]}</span>
         <div>
           <div class="module-title">${m}</div>
           <div class="module-duration">${[15, 30, 45, 30, 20][i]} min</div>
@@ -233,23 +239,20 @@ export default function CourseWebViewScreen() {
     true;
   `;
 
-  const handleMessage = useCallback(
-    (event: WebViewMessageEvent) => {
-      try {
-        const msg = JSON.parse(event.nativeEvent.data) as {
-          action: string;
-          data?: { progress?: number };
-        };
+  const handleMessage = useCallback((event: WebViewMessageEvent) => {
+    try {
+      const msg = JSON.parse(event.nativeEvent.data) as {
+        action: string;
+        data?: { progress?: number };
+      };
 
-        if (msg.action === 'close') {
-          // router.back() can be called here if needed
-        }
-      } catch {
-        // Malformed message - ignore
+      if (msg.action === 'close') {
+        // router.back() can be called here if needed
       }
-    },
-    [],
-  );
+    } catch {
+      // Malformed message - ignore
+    }
+  }, []);
 
   if (!course) {
     return (
@@ -293,7 +296,9 @@ export default function CourseWebViewScreen() {
 
         {loadError ? (
           <View className="flex-1 items-center justify-center px-8">
-            <Text style={{ fontSize: 48 }} className="mb-4">🌐</Text>
+            <Text style={{ fontSize: 48 }} className="mb-4">
+              🌐
+            </Text>
             <Text className="text-white text-xl font-semibold text-center mb-2">
               Failed to load content
             </Text>

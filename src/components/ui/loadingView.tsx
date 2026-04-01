@@ -11,11 +11,7 @@ function SkeletonItem() {
   const opacity = useSharedValue(0.4);
 
   useEffect(() => {
-    opacity.value = withRepeat(
-      withTiming(1, { duration: 800 }),
-      -1,
-      true,
-    );
+    opacity.value = withRepeat(withTiming(1, { duration: 800 }), -1, true);
   }, []);
 
   const animStyle = useAnimatedStyle(() => ({ opacity: opacity.value }));

@@ -3,7 +3,10 @@ import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FlashList } from '@shopify/flash-list';
 import Animated, { FadeInDown } from 'react-native-reanimated';
-import { useCourseStore, selectFilteredCoursesMemo as selectFilteredCourses } from '../../src/store/courseStore';
+import {
+  useCourseStore,
+  selectFilteredCoursesMemo as selectFilteredCourses,
+} from '../../src/store/courseStore';
 import { CourseCard } from '../../src/components/ui/courseCard';
 import { SearchBar } from '../../src/components/ui/searchBar';
 import { LoadingView } from '../../src/components/ui/loadingView';
@@ -11,7 +14,7 @@ import { OfflineBanner } from '../../src/components/ui/offlineBanner';
 import type { Course } from '../../src/types';
 
 export default function ExploreScreen() {
-    const courses = useCourseStore(selectFilteredCourses);
+  const courses = useCourseStore(selectFilteredCourses);
   const isLoading = useCourseStore((s) => s.isLoading);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
@@ -44,48 +47,48 @@ export default function ExploreScreen() {
 
       <SearchBar />
 
-      <View style={{height:50}}>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 12, gap: 8 }}
-      >
-        <TouchableOpacity
-          onPress={() => setSelectedCategory(null)}
-          className={`rounded-full px-4 py-2 border items-center justify-center ${
-            !selectedCategory
-              ? 'bg-primary-500 border-primary-500'
-              : 'bg-surface-card border-gray-700'
-          }`}
+      <View style={{ height: 50 }}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 12, gap: 8 }}
         >
-          <Text
-            className={`text-sm font-medium ${
-              !selectedCategory ? 'text-white' : 'text-gray-400'
-            }`}
-          >
-            All
-          </Text>
-        </TouchableOpacity>
-        {categories.map((cat) => (
           <TouchableOpacity
-            key={cat}
-            onPress={() => setSelectedCategory(cat === selectedCategory ? null : cat)}
+            onPress={() => setSelectedCategory(null)}
             className={`rounded-full px-4 py-2 border items-center justify-center ${
-              selectedCategory === cat
+              !selectedCategory
                 ? 'bg-primary-500 border-primary-500'
                 : 'bg-surface-card border-gray-700'
             }`}
           >
             <Text
-              className={`text-sm font-medium capitalize ${
-                selectedCategory === cat ? 'text-white' : 'text-gray-400'
+              className={`text-sm font-medium ${
+                !selectedCategory ? 'text-white' : 'text-gray-400'
               }`}
             >
-              {cat}
+              All
             </Text>
           </TouchableOpacity>
-        ))}
-      </ScrollView>
+          {categories.map((cat) => (
+            <TouchableOpacity
+              key={cat}
+              onPress={() => setSelectedCategory(cat === selectedCategory ? null : cat)}
+              className={`rounded-full px-4 py-2 border items-center justify-center ${
+                selectedCategory === cat
+                  ? 'bg-primary-500 border-primary-500'
+                  : 'bg-surface-card border-gray-700'
+              }`}
+            >
+              <Text
+                className={`text-sm font-medium capitalize ${
+                  selectedCategory === cat ? 'text-white' : 'text-gray-400'
+                }`}
+              >
+                {cat}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
       </View>
       {isLoading && filtered.length === 0 ? (
         <LoadingView count={3} />
@@ -109,4 +112,3 @@ export default function ExploreScreen() {
     </SafeAreaView>
   );
 }
-

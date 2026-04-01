@@ -25,9 +25,7 @@ beforeEach(() => jest.clearAllMocks());
 describe('SearchBar (uncontrolled)', () => {
   it('renders with default placeholder', () => {
     render(<SearchBar />);
-    expect(
-      screen.getByPlaceholderText('Search courses, instructors...')
-    ).toBeTruthy();
+    expect(screen.getByPlaceholderText('Search courses, instructors...')).toBeTruthy();
   });
 
   it('renders search icon', () => {
@@ -42,18 +40,13 @@ describe('SearchBar (uncontrolled)', () => {
 
   it('shows clear button after typing', () => {
     render(<SearchBar />);
-    fireEvent.changeText(
-      screen.getByPlaceholderText('Search courses, instructors...'),
-      'react'
-    );
+    fireEvent.changeText(screen.getByPlaceholderText('Search courses, instructors...'), 'react');
     expect(screen.getByText('✕')).toBeTruthy();
   });
 
   it('clears input when clear button is pressed', () => {
     render(<SearchBar />);
-    const input = screen.getByPlaceholderText(
-      'Search courses, instructors...'
-    );
+    const input = screen.getByPlaceholderText('Search courses, instructors...');
 
     fireEvent.changeText(input, 'react');
     fireEvent.press(screen.getByText('✕'));
@@ -63,20 +56,14 @@ describe('SearchBar (uncontrolled)', () => {
 
   it('calls global store when typing', () => {
     render(<SearchBar />);
-    fireEvent.changeText(
-      screen.getByPlaceholderText('Search courses, instructors...'),
-      'expo'
-    );
+    fireEvent.changeText(screen.getByPlaceholderText('Search courses, instructors...'), 'expo');
 
     expect(mockSetSearchQuery).toHaveBeenCalledWith('expo');
   });
 
   it('calls global store with empty string when cleared', () => {
     render(<SearchBar />);
-    fireEvent.changeText(
-      screen.getByPlaceholderText('Search courses, instructors...'),
-      'expo'
-    );
+    fireEvent.changeText(screen.getByPlaceholderText('Search courses, instructors...'), 'expo');
 
     fireEvent.press(screen.getByText('✕'));
 

@@ -1,5 +1,10 @@
 import apiClient from '../lib/apiClient';
-import { API_ENDPOINTS, CACHE_TTL_MS, COURSES_PER_PAGE, STORAGE_KEYS } from '../constants/app.constants';
+import {
+  API_ENDPOINTS,
+  CACHE_TTL_MS,
+  COURSES_PER_PAGE,
+  STORAGE_KEYS,
+} from '../constants/app.constants';
 import type { Course, Instructor, PaginatedResponse } from '../types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -51,7 +56,7 @@ export const courseService = {
 
     const products = productsRes.data.data.data;
     const users = usersRes.data.data.data;
-    const hasMore = productsRes.data.data.hasNextPage;    
+    const hasMore = productsRes.data.data.hasNextPage;
 
     const courses: Course[] = products.map((product, index) => {
       const instructor = users[index % users.length];
@@ -68,9 +73,7 @@ export const courseService = {
         thumbnail: product.thumbnail,
         images: product.images,
         instructorId: instructor?.id,
-        instructorName: instructor
-          ? `${instructor.name.first} ${instructor.name.last}`
-          : 'Unknown',
+        instructorName: instructor ? `${instructor.name.first} ${instructor.name.last}` : 'Unknown',
         instructorAvatar: instructor?.picture?.medium ?? '',
         isBookmarked: false,
         isEnrolled: false,

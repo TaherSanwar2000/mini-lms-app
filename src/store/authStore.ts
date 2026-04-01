@@ -46,22 +46,22 @@ export const useAuthStore = create<AuthStore>((set) => ({
     }
   },
 
- logout: async () => {
-  set({ isLoading: true });
+  logout: async () => {
+    set({ isLoading: true });
 
-  try {
-    await authService.logout();
-  } catch (error) {
-  } finally {
-    set({
-      user: null,
-      tokens: null,
-      isAuthenticated: false,
-      isLoading: false,
-      error: null,
-    });
-  }
-},
+    try {
+      await authService.logout();
+    } catch (error) {
+    } finally {
+      set({
+        user: null,
+        tokens: null,
+        isAuthenticated: false,
+        isLoading: false,
+        error: null,
+      });
+    }
+  },
 
   restoreSession: async () => {
     set({ isLoading: true });

@@ -33,9 +33,7 @@ export function OfflineBanner() {
       style={animStyle}
       className="absolute top-0 left-0 right-0 z-50 bg-red-500 px-4 py-3 flex-row items-center justify-center gap-2"
     >
-      <Text className="text-white font-semibold text-sm">
-        📡 No internet connection
-      </Text>
+      <Text className="text-white font-semibold text-sm">📡 No internet connection</Text>
       <View className="bg-white/20 rounded-full px-2 py-0.5">
         <Text className="text-white text-xs">Offline mode</Text>
       </View>

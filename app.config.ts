@@ -8,7 +8,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   orientation: 'default',
   icon: './assets/icon.png',
   userInterfaceStyle: 'automatic',
-  scheme: "minilms",
+  scheme: 'minilms',
   splash: {
     image: './assets/splash.png',
     resizeMode: 'contain',

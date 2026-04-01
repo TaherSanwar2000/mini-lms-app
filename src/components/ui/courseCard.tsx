@@ -43,10 +43,7 @@ export const CourseCard = memo(function CourseCard({ course }: CourseCardProps) 
   }, [course.id, toggleBookmark]);
 
   const handlePress = useCallback(() => {
-    cardScale.value = withSequence(
-      withTiming(0.97, { duration: 80 }),
-      withSpring(1),
-    );
+    cardScale.value = withSequence(withTiming(0.97, { duration: 80 }), withSpring(1));
     router.push(`/course/${course.id}`);
   }, [course.id]);
 
@@ -83,9 +80,7 @@ export const CourseCard = memo(function CourseCard({ course }: CourseCardProps) 
 
           {/* Category badge */}
           <View className="absolute top-3 left-3 bg-primary-500/90 rounded-full px-3 py-1">
-            <Text className="text-white text-xs font-medium capitalize">
-              {course.category}
-            </Text>
+            <Text className="text-white text-xs font-medium capitalize">{course.category}</Text>
           </View>
 
           {/* Bookmark button */}
@@ -95,9 +90,7 @@ export const CourseCard = memo(function CourseCard({ course }: CourseCardProps) 
             className="bg-black/50 rounded-full w-9 h-9 items-center justify-center"
             hitSlop={8}
           >
-            <Text style={{ fontSize: 16 }}>
-              {course.isBookmarked ? '🔖' : '🤍'}
-            </Text>
+            <Text style={{ fontSize: 16 }}>{course.isBookmarked ? '🔖' : '🤍'}</Text>
           </AnimatedTouchable>
         </View>
 
@@ -115,9 +108,12 @@ export const CourseCard = memo(function CourseCard({ course }: CourseCardProps) 
             ) : (
               <View
                 style={{
-                  width: 28, height: 28, borderRadius: 14,
+                  width: 28,
+                  height: 28,
+                  borderRadius: 14,
                   backgroundColor: '#374151',
-                  alignItems: 'center', justifyContent: 'center',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}
               >
                 <Text style={{ fontSize: 14 }}>👤</Text>

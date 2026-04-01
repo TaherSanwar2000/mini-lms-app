@@ -11,8 +11,8 @@ export const authService = {
       ApiResponse<{ user: User; accessToken: string; refreshToken: string }>
     >(API_ENDPOINTS.LOGIN, credentials);
 
-    const { user, accessToken, refreshToken } = data.data;    
-    const tokens: AuthTokens = { accessToken, refreshToken };    
+    const { user, accessToken, refreshToken } = data.data;
+    const tokens: AuthTokens = { accessToken, refreshToken };
     await Promise.all([
       SecureStore.setItemAsync(STORAGE_KEYS.ACCESS_TOKEN, accessToken),
       SecureStore.setItemAsync(STORAGE_KEYS.REFRESH_TOKEN, refreshToken),

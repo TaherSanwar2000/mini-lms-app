@@ -8,15 +8,7 @@ const icons = {
   profile: require('../../assets/tabs-icon/user.png'),
 };
 
-function TabIcon({
-  icon,
-  focused,
-  label,
-}: {
-  icon: any;
-  focused: boolean;
-  label: string;
-}) {
+function TabIcon({ icon, focused, label }: { icon: any; focused: boolean; label: string }) {
   return (
     <View className="items-center justify-start pt-4 w-32">
       <Image
@@ -28,9 +20,7 @@ function TabIcon({
         }}
       />
       <Text
-        className={`text-xs mt-0.5 ${
-          focused ? 'text-primary-400 font-semibold' : 'text-gray-500'
-        }`}
+        className={`text-xs mt-0.5 ${focused ? 'text-primary-400 font-semibold' : 'text-gray-500'}`}
       >
         {label}
       </Text>
@@ -55,7 +45,7 @@ export default function TabsLayout() {
           right: 0,
           height: 100,
           backgroundColor: tabBg,
-          borderTopWidth: 0,         
+          borderTopWidth: 0,
           borderTopLeftRadius: 20,
           borderTopRightRadius: 20,
 
@@ -79,9 +69,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          tabBarIcon: ({ focused }) => (
-            <TabIcon icon={icons.home} focused={focused} label="Home" />
-          ),
+          tabBarIcon: ({ focused }) => <TabIcon icon={icons.home} focused={focused} label="Home" />,
         }}
       />
       <Tabs.Screen

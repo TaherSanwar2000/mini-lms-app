@@ -1,18 +1,15 @@
 import { useState } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-  Alert,
-  ActivityIndicator,
-} from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Alert, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useAuthStore } from '../../src/store/authStore';
-import { useCourseStore, selectBookmarkedCourses, selectEnrolledCourses } from '../../src/store/courseStore';
+import {
+  useCourseStore,
+  selectBookmarkedCourses,
+  selectEnrolledCourses,
+} from '../../src/store/courseStore';
 import { authService } from '../../src/services/authService';
 
 function StatCard({ label, value, emoji }: { label: string; value: number; emoji: string }) {
@@ -33,8 +30,6 @@ export default function ProfileScreen() {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   console.log(user);
-  
-  
 
   const handleAvatarUpdate = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -80,23 +75,18 @@ export default function ProfileScreen() {
   if (!user) return null;
 
   const isValidImageUrl = (url?: string) => {
-  if (!url) return false;
+    if (!url) return false;
 
-  return (
-    url.startsWith('http') &&
-    !url.includes('placeholder') &&
-    !url.includes('via.placeholder.com')
-  );
-};
+    return (
+      url.startsWith('http') && !url.includes('placeholder') && !url.includes('via.placeholder.com')
+    );
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-surface" edges={['top']}>
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Header */}
-        <Animated.View
-          entering={FadeInDown.springify()}
-          className="items-center px-6 pt-8 pb-6"
-        >
+        <Animated.View entering={FadeInDown.springify()} className="items-center px-6 pt-8 pb-6">
           <TouchableOpacity onPress={handleAvatarUpdate} className="relative mb-4">
             {isValidImageUrl(user.avatar?.url) ? (
               <Image
@@ -116,7 +106,10 @@ export default function ProfileScreen() {
               {isUploading ? (
                 <ActivityIndicator size="small" color="white" />
               ) : (
-                <Image source={require('../../assets/images/edit.png')} style={{ width: 26, height: 26, resizeMode:'contain' }} />
+                <Image
+                  source={require('../../assets/images/edit.png')}
+                  style={{ width: 26, height: 26, resizeMode: 'contain' }}
+                />
               )}
             </View>
           </TouchableOpacity>

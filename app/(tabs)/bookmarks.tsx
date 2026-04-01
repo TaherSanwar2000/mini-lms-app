@@ -7,7 +7,6 @@ import { CourseCard } from '../../src/components/ui/courseCard';
 import type { Course } from '../../src/types';
 import { useCallback } from 'react';
 
-
 export default function BookmarksScreen() {
   const bookmarked = useCourseStore(selectBookmarkedCourses);
 

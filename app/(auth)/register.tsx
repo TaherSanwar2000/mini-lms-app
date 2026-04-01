@@ -1,12 +1,5 @@
 import { useRef } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  Platform,
-  ActivityIndicator,
-} from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Platform, ActivityIndicator } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Link, router } from 'expo-router';
 import { useForm, Controller } from 'react-hook-form';
@@ -50,9 +43,29 @@ export default function RegisterScreen() {
     ref?: React.RefObject<TextInput | null>;
   }> = [
     { name: 'username', label: 'Username', placeholder: 'Choose a username', nextRef: emailRef },
-    { name: 'email', label: 'Email', placeholder: 'Enter your email', keyboardType: 'email-address', ref: emailRef, nextRef: passwordRef },
-    { name: 'password', label: 'Password', placeholder: 'Create a strong password', secure: true, ref: passwordRef, nextRef: confirmRef },
-    { name: 'confirmPassword', label: 'Confirm Password', placeholder: 'Repeat your password', secure: true, ref: confirmRef },
+    {
+      name: 'email',
+      label: 'Email',
+      placeholder: 'Enter your email',
+      keyboardType: 'email-address',
+      ref: emailRef,
+      nextRef: passwordRef,
+    },
+    {
+      name: 'password',
+      label: 'Password',
+      placeholder: 'Create a strong password',
+      secure: true,
+      ref: passwordRef,
+      nextRef: confirmRef,
+    },
+    {
+      name: 'confirmPassword',
+      label: 'Confirm Password',
+      placeholder: 'Repeat your password',
+      secure: true,
+      ref: confirmRef,
+    },
   ];
 
   return (
@@ -66,18 +79,13 @@ export default function RegisterScreen() {
       showsVerticalScrollIndicator={false}
     >
       <View className="flex-1 px-6 pt-16 pb-10">
-
         {/* Header */}
         <View className="mb-8">
           <TouchableOpacity onPress={() => router.back()} className="mb-6">
             <Text className="text-primary-400 text-base">← Back</Text>
           </TouchableOpacity>
-          <Text className="text-white text-3xl font-bold font-heading mb-2">
-            Create account
-          </Text>
-          <Text className="text-gray-400 text-base">
-            Start your learning journey today
-          </Text>
+          <Text className="text-white text-3xl font-bold font-heading mb-2">Create account</Text>
+          <Text className="text-gray-400 text-base">Start your learning journey today</Text>
         </View>
 
         {/* Error */}
@@ -110,9 +118,7 @@ export default function RegisterScreen() {
                     onChangeText={onChange}
                     value={value}
                     onSubmitEditing={() =>
-                      field.nextRef
-                        ? field.nextRef.current?.focus()
-                        : handleSubmit(onSubmit)()
+                      field.nextRef ? field.nextRef.current?.focus() : handleSubmit(onSubmit)()
                     }
                   />
                 )}
