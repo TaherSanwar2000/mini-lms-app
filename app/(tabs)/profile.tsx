@@ -1,5 +1,12 @@
 import { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Alert, ActivityIndicator } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Alert,
+  ActivityIndicator,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
@@ -28,10 +35,12 @@ export default function ProfileScreen() {
   const enrolled = useCourseStore(selectEnrolledCourses);
   const [isUploading, setIsUploading] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-
-  console.log(user);
+  // ── Store picked URI locally so we show it immediately without waiting
+  //    for the server round-trip — prevents the "blank" flash ──────────────
+  const [localAvatarUri, setLocalAvatarUri] = useState<string | null>(null);
 
   const handleAvatarUpdate = async () => {
+    // Request permission
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
       Alert.alert('Permission needed', 'Please allow access to your photo library.');
@@ -39,22 +48,37 @@ export default function ProfileScreen() {
     }
 
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      // ── Fix 1: MediaTypeOptions is deprecated — use mediaTypes string array ──
+      mediaTypes: ['images'],
       allowsEditing: true,
       aspect: [1, 1],
       quality: 0.8,
+      // ── Fix 2: explicitly request base64 so the URI is always a local
+      //    file:// path that expo-image can load in production builds ──────────
+      base64: false,
+      exif: false,
     });
 
-    if (!result.canceled && result.assets[0]) {
-      setIsUploading(true);
-      try {
-        const updatedUser = await authService.updateAvatar(result.assets[0].uri);
-        updateUser(updatedUser);
-      } catch {
-        Alert.alert('Upload failed', 'Could not update your profile picture. Please try again.');
-      } finally {
-        setIsUploading(false);
-      }
+    if (result.canceled || !result.assets[0]) return;
+
+    const asset = result.assets[0];
+
+    // ── Fix 3: show the picked image immediately (optimistic UI) ─────────────
+    //    so the user sees their photo right away instead of a blank avatar
+    setLocalAvatarUri(asset.uri);
+    setIsUploading(true);
+
+    try {
+      const updatedUser = await authService.updateAvatar(asset.uri);
+      updateUser(updatedUser);
+      // Clear local URI — now use the server URL from updatedUser
+      setLocalAvatarUri(null);
+    } catch {
+      // Revert the optimistic update on failure
+      setLocalAvatarUri(null);
+      Alert.alert('Upload failed', 'Could not update your profile picture. Please try again.');
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -76,24 +100,33 @@ export default function ProfileScreen() {
 
   const isValidImageUrl = (url?: string) => {
     if (!url) return false;
-
     return (
-      url.startsWith('http') && !url.includes('placeholder') && !url.includes('via.placeholder.com')
+      url.startsWith('http') &&
+      !url.includes('placeholder') &&
+      !url.includes('via.placeholder.com')
     );
   };
+
+  // ── Resolve which avatar source to show ──────────────────────────────────
+  //    Priority: localAvatarUri (just picked) → server URL → initials fallback
+  const avatarSource = localAvatarUri ?? (isValidImageUrl(user.avatar?.url) ? user.avatar.url : null);
 
   return (
     <SafeAreaView className="flex-1 bg-surface" edges={['top']}>
       <ScrollView showsVerticalScrollIndicator={false}>
+
         {/* Header */}
-        <Animated.View entering={FadeInDown.springify()} className="items-center px-6 pt-8 pb-6">
+        <Animated.View
+          entering={FadeInDown.springify()}
+          className="items-center px-6 pt-8 pb-6"
+        >
           <TouchableOpacity onPress={handleAvatarUpdate} className="relative mb-4">
-            {isValidImageUrl(user.avatar?.url) ? (
+            {avatarSource ? (
               <Image
-                source={{ uri: user.avatar.url }}
+                source={{ uri: avatarSource }}
                 style={{ width: 96, height: 96, borderRadius: 48 }}
                 contentFit="cover"
-                cachePolicy="memory-disk"
+                cachePolicy={localAvatarUri ? 'none' : 'memory-disk'}
               />
             ) : (
               <View className="w-24 h-24 rounded-full bg-primary-500 items-center justify-center">
@@ -102,19 +135,22 @@ export default function ProfileScreen() {
                 </Text>
               </View>
             )}
-            <View className="absolute bottom-0 right-0 rounded-full w-8 h-8 items-center justify-center ">
+
+            {/* Edit badge */}
+            <View className="absolute bottom-0 right-0 rounded-full w-8 h-8 items-center justify-center">
               {isUploading ? (
                 <ActivityIndicator size="small" color="white" />
               ) : (
                 <Image
                   source={require('../../assets/images/edit.png')}
-                  style={{ width: 26, height: 26, resizeMode: 'contain' }}
+                  style={{ width: 26, height: 26 }}
+                  contentFit="contain"
                 />
               )}
             </View>
           </TouchableOpacity>
 
-          <Text className="text-white text-2xl font-bold font-heading">{user.username}</Text>
+          <Text className="text-white text-2xl font-bold">{user.username}</Text>
           <Text className="text-gray-400 text-sm mt-1">{user.email}</Text>
           <View className="mt-2 bg-primary-500/20 rounded-full px-3 py-1">
             <Text className="text-primary-400 text-xs font-medium capitalize">
@@ -159,7 +195,10 @@ export default function ProfileScreen() {
         </Animated.View>
 
         {/* Logout */}
-        <Animated.View entering={FadeInDown.delay(300).springify()} className="mx-4 mb-8">
+        <Animated.View
+          entering={FadeInDown.delay(300).springify()}
+          className="mx-4 mb-8"
+        >
           <TouchableOpacity
             onPress={handleLogout}
             disabled={isLoggingOut}
@@ -172,6 +211,7 @@ export default function ProfileScreen() {
             )}
           </TouchableOpacity>
         </Animated.View>
+
       </ScrollView>
     </SafeAreaView>
   );

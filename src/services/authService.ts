@@ -84,6 +84,8 @@ export const authService = {
     );
 
     await SecureStore.setItemAsync(STORAGE_KEYS.USER_DATA, JSON.stringify(data.data));
+    console.log(data);
+    
     return data.data;
   },
 };
